@@ -1,0 +1,23 @@
+{%- paginate collection.products by 9999-%}
+  <div class="main-wrapper">
+     {%- for product in collection.products -%}
+       
+       <div class="product-heading">
+       {{  product.title }}
+       </div>
+       
+        {% endfor %}
+  </div>
+{% endpaginate %}
+{% schema %}
+  {
+    "name": "Section name",
+    "settings": []
+  }
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

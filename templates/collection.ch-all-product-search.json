@@ -1,0 +1,11 @@
+{
+  "sections": {
+    "main": {
+      "type": "ch-all-product-search",
+      "settings": {}
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

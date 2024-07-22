@@ -1,0 +1,160 @@
+<div class="promo-banner-section promo-banner-section-{{ section.id }}">
+  {% for block in section.blocks %}    
+      <div class="custom-banner-list main-banner-grid-block-{{ block.id }} banner-utm-{{ block.settings.utm_medium | handleize }} banner-discount-{{ block.settings.discount_code | handleize }}" style="display:none">
+        <div class="inner-section">
+          {{ block.settings.text }}
+        </div>
+        <div class="close-icon">
+          <svg data-v-a0e00534="" width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="close-icon"><path d="M6.41408 5.00002C6.0236 4.60953 5.3905 4.60953 5.00002 5.00002C4.60953 5.3905 4.60953 6.0236 5.00002 6.41408L10.586 12L5.00002 17.586C4.60953 17.9764 4.60953 18.6095 5.00002 19C5.3905 19.3905 6.0236 19.3905 6.41408 19L12 13.4141L17.586 19C17.9764 19.3905 18.6095 19.3905 19 19C19.3905 18.6095 19.3905 17.9764 19 17.586L13.4141 12L19 6.41408C19.3905 6.0236 19.3905 5.3905 19 5.00002C18.6095 4.60953 17.9764 4.60953 17.586 5.00002L12 10.586L6.41408 5.00002Z"></path></svg>
+        </div>
+      </div>
+    
+<style>
+.main-banner-grid-block-{{ block.id }}{
+  text-align:center;
+  color:{% if block.settings.text_color.alpha == 0.0 or block.settings.text_color == blank %}#fff{% else %}{{ block.settings.text_color }}{% endif %};
+  background:{% if block.settings.background_color.alpha == 0.0 or block.settings.background_color == blank %}#000{% else %}{{ block.settings.background_color }}{% endif %};
+  padding: 10px 50px;
+  position:relative;
+}
+.main-banner-grid-block-{{ block.id }} .close-icon svg{  
+    position: absolute;
+    right: 10px;
+    top: 10px;
+}  
+.close-icon{
+  cursor: pointer;
+}
+.main-banner-grid-block-{{ block.id }} .close-icon svg path{
+    fill:{% if block.settings.text_color.alpha == 0.0 or block.settings.text_color == blank %}#fff{% else %}{{ block.settings.text_color }}{% endif %};
+  }
+</style>
+    
+  {% endfor %}
+</div> 
+
+{% for block in section.blocks %}
+  {% if block.settings.utm_medium != blank %}
+      {% assign utm_medium = block.settings.utm_medium | handleize %}
+  {% endif %}
+  {% if block.settings.discount_code != blank %}
+      {% assign discount_code = block.settings.discount_code | handleize %}
+  {% endif %}
+{% endfor %}
+<script>
+
+var utm_medium = "{{ utm_medium }}"
+var discount_code = "{{ discount_code }}"  
+  
+if(typeof utm_medium != "undefined" && utm_medium != null && utm_medium != ""){
+  // check if utm_medium parameter present in url 
+   if (window.location.href.indexOf(utm_medium) > -1) {     
+      if(localStorage.getItem('OpenPromoBanner') != null) {    
+        var storage_value = localStorage.getItem('OpenPromoBanner');
+        if (storage_value === 'false') {
+          document.querySelector('.banner-utm-'+utm_medium).style="display:none";
+        }else{
+          document.querySelector('.banner-utm-'+utm_medium).style="display:block";  
+        }        
+      }else{
+        document.querySelector('.banner-utm-'+utm_medium).style="display:block";
+      }
+    }
+}
+
+if(typeof discount_code != "undefined" && discount_code != null && discount_code != ""){
+        let dc ="";
+      // check if any discount code applied in cart
+        fetch('/cart.js')
+        .then(response => response.json())
+        .then(data => {
+          const lineItems = data.items || [];
+          let discountsApplied = false;
+          lineItems.forEach(item => {
+            if (item.line_price < item.original_line_price) {
+              discountsApplied = true;
+               dc = data.cart_level_discount_applications[0].title;
+            }
+          });
+          return discountsApplied;
+        })
+        .then(discountsApplied => {
+          if (discountsApplied) {
+             if(dc == discount_code) {
+                      if (localStorage.getItem('OpenPromoBanner') != null) {    
+                        var storage_value = localStorage.getItem('OpenPromoBanner');
+                        if (storage_value === 'false') {
+                          document.querySelector('.banner-discount-'+discount_code).style="display:none";
+                        }else{
+                          document.querySelector('.banner-discount-'+discount_code).style="display:block";  
+                        }        
+                      }else{
+                        document.querySelector('.banner-discount-'+discount_code).style="display:block";
+                      }
+             }
+          }
+        })
+        .catch(error => {
+          console.error('Error fetching cart data:', error);
+        });
+}  
+
+  const close_buttons = document.querySelectorAll('.close-icon');
+  close_buttons.forEach(button => {
+    button.addEventListener('click',function(){
+        localStorage.setItem('OpenPromoBanner','false');
+        this.closest('.custom-banner-list').style="display:none";
+    });
+  });
+</script>
+
+<style>
+  .promo-banner-section-{{ section.id }}{
+    text-align:center;
+  }
+</style>
+
+{% schema %}
+  {
+    "name": "Promo Banner",
+    "settings": [],
+    "blocks": [
+      {
+        "type": "banner",
+        "name":"Banner",
+        "settings": [
+           {
+              "type":"richtext",
+              "id":"text",
+              "label": "Text"        
+            },
+            {
+              "type":"text",
+              "id":"utm_medium",
+              "label": "utm medium"        
+            },    
+             {
+              "type":"text",
+              "id":"discount_code",
+              "label": "Discount Code"        
+            },    
+           {
+              "type":"color",
+              "id":"text_color",
+              "label": "Text Color"        
+            },
+            {
+              "type":"color",
+              "id":"background_color",
+              "label": "Background Color"        
+            } 
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Promo Banner"
+      }
+    ]
+  }
+{% endschema %}
