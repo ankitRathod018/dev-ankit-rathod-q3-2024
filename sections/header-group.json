@@ -1,0 +1,39 @@
+/*
+* ------------------------------------------------------------
+* IMPORTANT: The contents of this file are auto-generated.
+*
+* This file may be updated by the Shopify admin theme editor
+* or related systems. Please exercise caution as any changes
+* made to this file may be overwritten.
+* ------------------------------------------------------------
+*/
+{
+    "type": "header",
+    "name": "Header",
+    "sections": {
+      "promo-banner": {
+        "type": "promo-banner",
+        "blocks": {
+          "banner_qwFPEk": {
+            "type": "banner",
+            "settings": {
+              "text": "<p>Your 15% off discount code WELCOME15 will auto-apply at checkout.<\/p>",
+              "utm_medium": "utm_medium_promo",
+              "discount_code": "",
+              "text_color": "",
+              "background_color": ""
+            }
+          }
+        },
+        "block_order": [
+          "banner_qwFPEk"
+        ],
+        "settings": {
+        }
+      }
+    },
+    "order": [
+      "promo-banner"
+    ]
+  }
+  
